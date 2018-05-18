@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>首页</title>
+<link href="css/style_0519.css" rel="stylesheet" type="text/css" />
+<script src="JavaScript/jquery.js"></script>
+<script src="JavaScript/jquery-hd.js"></script>
+<script>
+$(function(){
+	$(".hd_hover").each(function(i){
+		$(this).mouseover(function(){
+		$(".hd_ceng").eq(i).show();
+	}).mouseout(function(){
+		$(".hd_ceng").mouseover(function(){
+			}).mouseout(function(){
+					$(".hd_ceng").eq(i).hide();
+					})
+				}).mouseout(function(){
+				$(".hd_ceng").hide();
+				})
+	})
+})
+
+</script>
+</head>
+
+<body>
+	<div class="web_header">
+    	<div style="width:1190px;">
+        	<div class="web_hd01">JeeSite Web</div>
+            <div class="web_hd02">
+                <ul>
+                    <li class="hd_li1" style="width:80px;"><a href="">首页</a></li>
+                    <li class="hd_hover hd_li1">
+                        <a href="">组织机构</a>
+                        <div class="hd_ceng">
+                            <a href="" target="_blank">机构设置</a>
+                            <a href="" target="_blank">机构职责</a>
+                        </div>
+                    </li>
+                    <li class="hd_hover">
+                        <a href="">质量检验</a>
+                        <div class="hd_ceng">
+                            <a href="" target="_blank">质量检验</a>
+                            <a href="" target="_blank">机构职责</a>
+                        </div>
+                    </li>
+                    <li class="hd_hover">
+                        <a href="">软件介绍</a>
+                        <div class="hd_ceng">
+                            <a href="" target="_blank">软件介绍</a>
+                            <a href="" target="_blank">机构职责</a>
+                        </div>
+                    </li>
+                    <li><a href="">友情链接</a></li>
+                    <li><a href="">百度一下</a></li>
+                    <li><a href="">公共留言</a></li>
+                </ul>
+            </div>
+            <form class="web_hd03">
+                <input type="text" class="txt" />
+                <input type="button" class="btn" />
+            </form>
+            <div class="web_hd04">
+                <form>
+                <input type="button" class="denglu" />
+                <input type="button" class="zhuce" />
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="web_banner">
+    	<ul class="banner_img">
+       	  	<li>
+            	<span><a href="#">查看详情</a></span>
+            </li>
+            <li style="background:url(images/banner2.jpg)"></li>
+            <li style="background:url(images/banner2.jpg)"></li>
+            <li style="background:url(images/banner3.jpg)"></li>
+        </ul>
+        <div class="arr">
+            <span class="left"><img src="images/img0519_22.png" width="26" height="44" /></span>
+            <span class="right"><img src="images/img0519_23.png" width="26" height="44" /></span>
+    	</div>
+        <ol>
+        	<li class="current"></li>
+        	<li></li>
+        	<li></li>
+        	<li></li>
+        </ol>
+    </div>
+    <div class="web_main">
+    	<div class="web_m01">
+        	<div class="web_m11"><span>组织机构</span><a href="" class="web_more1">更多</a></div>
+        	<ul>
+            	<li><a href="">组织机构组织机构组织机构组织机构组织机构</a><span>05-01</span></li>
+                <li><a href="">组织机构组织机构组织机构组织机构组织机构</a><span>05-01</span></li>
+                <li><a href="">组织机构组织机构组织机构组织机构组织机构</a><span>05-01</span></li>
+                <li><a href="">组织机构组织机构组织机构组织机构组织机构</a><span>05-01</span></li>
+                <li><a href="">组织机构组织机构组织机构组织机构组织机构</a><span>05-01</span></li>
+                <li><a href="">组织机构组织机构组织机构组织机构组织机构</a><span>05-01</span></li>
+            </ul>
+        </div>
+        <div class="web_m01">
+        	<div class="web_m11"><span>质量监督</span><a href="" class="web_more1">更多</a></div>
+        	<ul>
+            	<li><a href="">质量监督质量监督质量监督质量监督</a><span>05-01</span></li>
+                <li><a href="">质量监督质量监督</a><span>05-01</span></li>
+                <li><a href="">质量监督质量监督质量监督</a><span>05-01</span></li>
+                <li><a href="">质量监督</a><span>05-01</span></li>
+                <li><a href="">质量监督</a><span>05-01</span></li>
+                <li><a href="">质量监督</a><span>05-01</span></li>
+            </ul>
+        </div>
+        <div class="web_m01">
+        	<div class="web_m11"><span>政策法规</span><a href="" class="web_more1">更多</a></div>
+        	<ul>
+            	<li><a href="">政策法规政策法规政策法规政策法规</a><span>05-01</span></li>
+                <li><a href="">政策法规政策法规</a><span>05-01</span></li>
+                <li><a href="">政策法规政策法规政策法规</a><span>05-01</span></li>
+                <li><a href="">政策法规</a><span>05-01</span></li>
+                <li><a href="">政策法规</a><span>05-01</span></li>
+                <li><a href="">政策法规</a><span>05-01</span></li>
+            </ul>
+        </div>
+    </div>
+    <div class="web_footer">
+    	<p style="color:#6c6c6c;"><a href="">公共留言</a>|<a href="">全站搜索</a>|<a href="">站点地图</a>|<a href="">技术支持</a>|<a href="">后台管理</a></p>
+        <p>Copyright © 2012-2013 ThinkGem-Powered By JeeSite V1.0</p>
+        <p class="web_time">
+        	<script language="javascript">
+	                function writeDateInfo()
+	                {
+	                var day="";
+	                var month="";
+	                var ampm="";
+	                var ampmhour="";
+	                var myweekday="";
+	                var year="";
+	                mydate=new Date();
+	                myweekday=mydate.getDay();
+	                myyear= mydate.getYear();
+	                mymonth=mydate.getMonth()+1;
+	                myday= mydate.getDate();
+	                year=(myyear > 200) ? myyear : 1900 + myyear;
+	                if(myweekday == 0)
+	                weekday=" 星期日";
+	                else if(myweekday == 1)
+	                weekday=" 星期一";
+	                else if(myweekday == 2)
+	                weekday=" 星期二";
+	                else if(myweekday == 3)
+	                weekday=" 星期三";
+	                else if(myweekday == 4)
+	                weekday=" 星期四";
+	                else if(myweekday == 5)
+	                weekday=" 星期五";
+	                else if(myweekday == 6)
+	                weekday=" 星期六";
+	                document.write(year+"年"+mymonth+"月"+myday+"日&nbsp;&nbsp;"+weekday);
+	                }
+                   </script>
+	               <script>writeDateInfo();</script>
+        </p>
+    </div>
+</body>
+</html>

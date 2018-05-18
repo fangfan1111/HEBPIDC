@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>首页 - ${site.name}</title>
+<meta http-equiv="keywords" content="${site.keywords!}"/>
+<meta http-equiv="description" content="${site.description!}"/>
+<head>
+[#include "../include/header.html"/]
+  <link rel="stylesheet" href="${ctxStatic}/bootstrap3.3.6/bootstrap/css/bootstrap.min.css">
+<style type="text/css">
+ .w700{width:900px;}
+.mt10{ margin-top:10px;}
+.rim05{ border:1px solid #d8d8d8;}
+.LanMu01-2{width:100%; height:30px;}
+.LanMu01-2 a{ font-size:12px;}
+.LanMu01-2 span{ line-height:30px; float:left; font-size:14px; font-weight:bold; color:#2b4099;}
+.LanMu01-2 em{float:right; padding-right:1%; font-size:12px; line-height:28px;}
+.LanMu01-1{ width:23px; height:30px; float:left;}
+.LanMu01-3{ width:10px; height:30px; float:right;}
+
+.sousuoCon{ width:97%; margin:auto; line-height:24px;}
+dl.sslist{border-bottom:1px dashed #ccc; line-height:1.8em; padding:10px 0 10px;}
+dl.sslist dt{height:30px;}
+dl.sslist dt span a,dl.list3 dt span a:visited{font-size:14px; color:#ff3300;}
+dl.sslist dt a,dl.list3 dt a:visited{font-size:14px; color:#0033FF;}
+dl.sslist dt a:hover{font-size:14px; color:#ff3300;}
+dl.sslist dd{color:#000;}
+dl.sslist dd.zy{height:50px; text-indent:20px; text-indent:20px; color:#999; overflow:hidden;}
+.red,a.red:link,a.red:visited{color:#f54100;}
+</style>
+</head>
+
+<body>
+ [#include "../include/navi.html"/]
+<div class="container">
+	<div class="w700 mt10">
+    	<div class="rim05">
+            <div class="LanMu01-2">
+                <div class="LanMu01-1"></div>
+                <span>搜索结果</span>
+                <div class="LanMu01-3"></div>
+            </div>
+            <div class="sousuoCon">
+            [#if q??]
+                     [@cms_lucene_page q=q channelId=channelId descLen='100' append='...' count='10']
+            <div class="search_msg">
+            您搜索的<span class="red">“${input!}”</span>， 共有 <span class="red">${tag_pagination.count!} 条</span> 查询结果，
+            </div>
+            [#list tag_list as s]
+            <dl class="sslist">
+                <dt><span>[<a href="${s.ctgUrl}" target="_blank">${s.category.name}</a>]</span>  <a href="${s.url}" title="${s.title}" target="_blank">
+             	${s.title?replace('${q!}', "<span style='color: red;'>${q!}</span>")}  
+                </a></dt>
+                <dd class="zy">  
+                  [#if s.articleData.content??]
+                    [#assign bb=s.articleData.content?replace("<(S*?)[^>]*>.*?|<.*? />","","ri")?replace("&nbsp;","","ri")/]
+                    [@text_cut s=bb?replace('${q!}', "<span style='color: red;'>${q!}</span>") len=descLen append=append/]
+                   [/#if]
+                </dd>
+                <dd>来源： <a href="${s.articleData.copyfrom!}" target="_blank">${s.articleData.copyfrom!'本站原创'}</a> &nbsp;&nbsp; 浏览次数：${s.hits}次 &nbsp;&nbsp; 发布时间： ${s.updateDate?string('yyyy-MM-dd HH:mm:ss')} </dd>
+            </dl>
+            [/#list]
+            <div class="pagesite">[@cms_pagination sysPage='1'/]</div>
+            [/@cms_lucene_page]	
+            [/#if]
+            </div>
+        </div>
+	</div>  
+</div>
+</body>
+</html>

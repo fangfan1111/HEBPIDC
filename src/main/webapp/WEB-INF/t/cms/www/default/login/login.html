@@ -1,0 +1,22 @@
+<script type="text/javascript">
+     $(function(){
+            $('.admin').hover(function(){
+		$(".admin_gnlb").toggle();
+          });
+    });
+</script>
+[#if user??]
+                    <span class="out"><a href="${ctxadmin}/logout">退出</a></span>
+                         <span class="admin">
+		            	当前用户：<a href="#" class="hh_hover">${user.loginName}</a>
+		            	<div class="admin_gnlb">
+		                	<ul>
+		                        <li><a href="${ctxadmin}">个人信息</a></li>
+		                	</ul>
+                    		<div class="bj_bottom"></div>
+                		</div>
+		            </span>
+                    [#else]
+                               <a href="${ctxadmin}" class="sj_denglv one">登录</a> | 
+			          <a href="${ctxfront}/signup">注册</a> 
+ [/#if]

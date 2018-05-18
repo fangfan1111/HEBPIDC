@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>${channel.title!channel.name} - ${site.name}</title>
+<meta http-equiv="keywords" content="${channel.keywords!}"/>
+<meta http-equiv="description" content="${channel.description!}"/>
+[#include "../include/header.html"/]
+</style>
+</head>
+<body>
+    [#include "../include/navi.html"/]
+<div class="lb_main">
+    	<div class="lb_m_left" id="left">
+        	<div class="lb_m_l1">栏目列表</div>
+            <ul class="lb_m_l2" style="margin:0 0 0 15px;">
+                       
+            	[#list channel.nodeList as n]
+                   <li class="[#if channel.id==n.id] lb_tx01 [/#if]"> <a href="${n.url}" target="_blank"  class="[#if channel.id==n.id] lb_li03 [/#if]">${n.name}</a></li>
+                [/#list]
+            </ul>
+            <div class="lb_m_l1">推荐阅读</div>
+            <div class="lb_m_l02" style="height:200px;">
+            		
+            </div>
+        </div>
+           <div class="lb_m_right" id="right">
+        	<div class="lb_m_r1">
+                       <a href="${ctxfront}">首页</a> > [#list channel.nodeList as n]<a href="${n.url}" target="_blank">${n.name}</a>[#if n_has_next] > [/#if][/#list]
+                </div>
+   <div class="nr_zw">
+            	<h3>${channel.name}</h3>
+                <div class="clear"></div>
+                <p>${channel.content!}</p>
+                <div class="nr_xie">
+                	<span>发布者：${channel.user.name}</span><span>发布时间：${channel.createDate?string('yyyy-MM-dd HH:mm:ss')} </span><span>更新时间： ${channel.updateDate?string('yyyy-MM-dd HH:mm:ss')}</span>
+                </div>
+             
+               
+            </div>
+
+            </div>
+</div>
+	
+    [#include "../include/footer.html"/]
+</body>
+</html>

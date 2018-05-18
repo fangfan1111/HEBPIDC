@@ -1,0 +1,26 @@
+@charset "utf-8";
+/* CSS Document */
+html,body,p,ul,li,dl,dt,dd,div,h1,h2,h3,h4,h5,h6,strong,em,i,img,form,input,table{magrin:0 auto; padding:0;}
+body{font-size:12px;margin:0;padding:0;background:#fff;}
+img{border:0px;}
+a{text-decoration:none;}
+a:hover{text-decoration:none;}
+ul{list-style:none; overflow:hidden;margin:0;}
+input{background:none; border:none;}
+table{border-collapse:collapse;}
+
+.login_2{height:58px;padding-left:80px;padding-top:0px;overflow:hidden;}
+.ligin_3{height:487px;background:#376db7;position:relative;}
+.ligin_31{height:487px;background:url(../images/login_03.jpg) no-repeat;}
+.ligin_32{width:300px;height:377px;padding-left:20px;background:url(../images/login_04.jpg) no-repeat;position:absolute;top:46px;left:850px;}
+.ligin_32 div{margin-top:15px;}
+.yhdl{height:40px;font-size:14px;font-weight:bold;margin-top:0;overflow:hidden;}
+.yhdl_01{float:left;}
+.yhdl_02{float:right;padding-right:35px;}
+.yhdl_02 a{color:#E4393C;}
+.yhdl_02 a:hover{color:#DB5E61;}
+.input1{width:266px;height:34px;border:1px #c8c8c8 solid;line-height:34px;text-indent:10px;font-size:14px;margin-top:5px;}
+.yzm{float:left;width:195px;}
+.yzmp img{float:left;width:62px;height:20px;margin-left:10px;margin-top:10px; cursor:pointer;}
+.login_btn{width:268px;height:34px;margin-top:17px;background:url(../images/login_08.jpg) no-repeat;margin-top:40px;}
+.footer{padding-left: 0px;margin-top: 12px;margin-bottom: 0px;line-height: 18px;padding-left:90px;color:#999;line-height:40px;}

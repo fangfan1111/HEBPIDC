@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd"
+	default-lazy-init="true">
+
+	<description>Spring Configuration cms</description>
+	
+		
+   <!-- FreeMarker视图解析 如返回student。。在这里配置后缀名ftl和视图解析器。。-->  
+    <bean id="freemarkerConfig"  
+        class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">  
+        <property name="templateLoaderPath">    
+            <value>/WEB-INF/t/cms/</value>    
+        </property>    
+        <property name="defaultEncoding" value="UTF-8" />  
+        <property name="freemarkerVariables">  
+            <map>  
+                <entry key="xml_escape" value-ref="fmXmlEscape" /> 
+                <entry key="cms_channel" value-ref="cms_channel" /> 
+                <entry key="cms_pagination" value-ref="cms_pagination" />
+                <entry key="cms_channel_list" value-ref="cms_channel_list" />
+                <entry key="cms_channel_page" value-ref="cms_channel_page" />
+                <entry key="cms_content" value-ref="cms_content" />
+                <entry key="cms_content_list" value-ref="cms_content_list" /> 
+                <entry key="cms_content_page" value-ref="cms_content_page" /> 
+                <entry key="text_cut" value-ref="text_cut" /> 
+<!--                 <entry key="cms_lucene_list" value-ref="cms_lucene_list" />  -->
+<!--                 <entry key="cms_lucene_page" value-ref="cms_lucene_page" />  -->
+            </map>  
+        </property>  
+        <property name="freemarkerSettings">  
+            <props>  
+              	<prop key="tag_syntax">auto_detect</prop>
+				<prop key="template_update_delay">5</prop>
+				<prop key="defaultEncoding">UTF-8</prop>
+				<prop key="url_escaping_charset">UTF-8</prop>
+				<prop key="locale">zh_CN</prop>
+				<prop key="boolean_format">true,false</prop>
+				<prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop>
+				<prop key="date_format">yyyy-MM-dd</prop>
+				<prop key="time_format">HH:mm:ss</prop>
+				<prop key="number_format">0.######</prop>
+				<prop key="whitespace_stripping">true</prop>
+            </props>  
+        </property>  
+    </bean>  
+    
+    <bean id="viewResolver"  
+        class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">  
+        <property name="viewClass"  
+            value="org.springframework.web.servlet.view.freemarker.FreeMarkerView"></property>
+        <!-- <property name="suffix" value=".html" />  -->
+        <property name="contentType" value="text/html;charset=utf-8" />  
+        <property name="exposeRequestAttributes" value="false" />  
+        <property name="exposeSessionAttributes" value="false" />  
+        <property name="exposeSpringMacroHelpers" value="true" />  
+        <property name="order" value="0" />  
+    </bean>  
+	
+	<bean id="cms_channel" class="cn.huazx.ebp.common.directive.ChannelDirective"/>
+	<bean id="cms_pagination" class="cn.huazx.ebp.common.directive.PaginationDirective"/>
+	<bean id="cms_channel_list" class="cn.huazx.ebp.common.directive.ChannelListDirective"/>
+	<bean id="cms_channel_page" class="cn.huazx.ebp.common.directive.ChannelPageDirective"/>
+	
+	<bean id="cms_content" class="cn.huazx.ebp.common.directive.ContentDirective"/>
+	<bean id="cms_content_list" class="cn.huazx.ebp.common.directive.ContentListDirective"/>
+	<bean id="cms_content_page" class="cn.huazx.ebp.common.directive.ContentPageDirective"/>
+	
+	<bean id="text_cut" class="cn.huazx.ebp.common.directive.TextCutDirective"/>
+<!-- 	<bean id="cms_lucene_list" class="cn.huazx.ebp.modules.cms.lucene.LuceneDirectiveList"/> -->
+<!-- 	<bean id="cms_lucene_page" class="cn.huazx.ebp.modules.cms.lucene.LuceneDirectivePage"/> -->
+	
+	
+	<bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape" />
+	 <!-- 生成静态文件bean -->
+	<bean id="staticPageSvc" class="cn.huazx.ebp.modules.cms.service.StaticPageSvcService">
+		<property name="freeMarkerConfigurer">
+			<bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+				  <property name="templateLoaderPath">    
+			            <value>/WEB-INF/t/cms/</value>    
+			        </property>    
+			        <property name="defaultEncoding" value="UTF-8" />  
+			        <property name="freemarkerVariables">  
+			            <map>  
+			                <entry key="xml_escape" value-ref="fmXmlEscape" /> 
+			                <entry key="cms_channel" value-ref="cms_channel" /> 
+			                <entry key="cms_pagination" value-ref="cms_pagination" />
+			                <entry key="cms_channel_list" value-ref="cms_channel_list" />
+			                <entry key="cms_channel_page" value-ref="cms_channel_page" />
+			                <entry key="cms_content" value-ref="cms_content" />
+			                <entry key="cms_content_list" value-ref="cms_content_list" /> 
+			                <entry key="cms_content_page" value-ref="cms_content_page" /> 
+			                <entry key="text_cut" value-ref="text_cut" /> 
+<!-- 			                <entry key="cms_lucene_list" value-ref="cms_lucene_list" />  -->
+<!-- 		                  	<entry key="cms_lucene_page" value-ref="cms_lucene_page" />  -->
+			            </map>  
+			        </property>  
+			        <property name="freemarkerSettings">  
+			            <props>  
+			              	<prop key="tag_syntax">auto_detect</prop>
+							<prop key="template_update_delay">5</prop>
+							<prop key="defaultEncoding">UTF-8</prop>
+							<prop key="url_escaping_charset">UTF-8</prop>
+							<prop key="locale">zh_CN</prop>
+							<prop key="boolean_format">true,false</prop>
+							<prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop>
+							<prop key="date_format">yyyy-MM-dd</prop>
+							<prop key="time_format">HH:mm:ss</prop>
+							<prop key="number_format">0.######</prop>
+							<prop key="whitespace_stripping">true</prop>
+			            </props>  
+			        </property>  
+			</bean>
+		</property>
+	</bean>
+</beans>

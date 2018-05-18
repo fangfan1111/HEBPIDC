@@ -1,0 +1,44 @@
+@charset "utf-8";
+/* CSS Document */
+html,body{ font-family:'微软雅黑'}
+.nav-more{width:100%;}
+.nav-more li.dropdown{margin:0 23px;}
+.nav-more li a{color:#333;}
+@media (min-width:1301px) {
+	.nav-more{display:none;}
+}
+
+@media (min-width:768px) and (max-width:1300px){
+	.navbar-nav li.md-hidden{display:none;}
+	.hidden-xs{ display:none;}
+}
+
+@media (min-width:1025px){
+#navbar-collapse{width:56%;}
+.nav-menu{width:91%;float:left;margin-right:10px;overflow:hidden;position:relative;height:50px;}
+.nav-menu .navbar-nav{ position:absolute;top:0;left:0;}
+.leftbutton{float:left;color:#fff;margin-top:18px; cursor:pointer;}
+.rightbutton{float:left;color:#fff;margin-top:18px;margin-left:10px; cursor:pointer;}
+}
+
+@media (min-width:768px) and (max-width:1024px){
+	#navbar-collapse{width:60%;}
+	.nav-menu{width:88%; height:50px;float:left;margin-right:15px;overflow:hidden;position:relative;}
+	.nav-menu .navbar-nav{ position:absolute;top:0;left:0;}
+	.leftbutton{float:left;color:#fff;margin-top:18px; cursor:pointer;}
+	.rightbutton{float:left;color:#fff;margin-top:18px;margin-left:10px; cursor:pointer;}
+	.navbar-collapse.pull-left{float:left !important;}
+}
+
+@media (max-width:767px) {
+	.nav-more{display:none;}
+	.leftbutton,.rightbutton{ display:none;}
+	#navbar-collapse{ overflow-x:hidden;}
+}
+
+
+
+
+
+
+

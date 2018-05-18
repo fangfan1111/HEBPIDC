@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.huazx.ebp.modules.test.dao.TestProjectDao">
+    
+	<sql id="testProjectColumns">
+		a.id AS "id",
+		a.projecctname AS "projecctname",
+		a.projectaddress AS "projectaddress",
+		a.tradecode AS "tradecode",
+		a.tradename AS "tradename",
+		a.approvaldate AS "approvaldate",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="testProjectJoins">
+	</sql>
+    
+	<select id="get" resultType="TestProject">
+		SELECT 
+			<include refid="testProjectColumns"/>
+		FROM test_project a
+		<include refid="testProjectJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TestProject">
+		SELECT 
+			<include refid="testProjectColumns"/>
+		FROM test_project a
+		<include refid="testProjectJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TestProject">
+		SELECT 
+			<include refid="testProjectColumns"/>
+		FROM test_project a
+		<include refid="testProjectJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO test_project(
+			id,
+			projecctname,
+			projectaddress,
+			tradecode,
+			tradename,
+			approvaldate,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{projecctname},
+			#{projectaddress},
+			#{tradecode},
+			#{tradename},
+			#{approvaldate},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE test_project SET 	
+			projecctname = #{projecctname},
+			projectaddress = #{projectaddress},
+			tradecode = #{tradecode},
+			tradename = #{tradename},
+			approvaldate = #{approvaldate},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE test_project SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

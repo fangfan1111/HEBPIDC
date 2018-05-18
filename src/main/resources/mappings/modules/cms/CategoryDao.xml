@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.huazx.ebp.modules.cms.dao.CategoryDao">
+    
+	<sql id="cmsCategoryDaoColumns">
+		a.id AS "id",
+		a.parent_id AS "parent.id",
+		a.parent_ids AS "parentIds",
+		a.path AS "path",
+		a.site_id AS "site.id",
+		a.office_id AS "office.id",
+		a.module AS "module",
+		a.name AS "name",
+		a.image AS "image",
+		a.href AS "href",
+		a.target AS "target",
+		a.description AS "description",
+		a.keywords AS "keywords",
+		a.sort AS "sort",
+		a.in_menu AS "inMenu",
+		a.in_list AS "inList",
+		a.show_modes AS "showModes",
+		a.allow_comment AS "allowComment",
+		a.is_audit AS "isAudit",
+		a.custom_list_view AS "customListView",
+		a.custom_content_view AS "customContentView",
+		a.view_config AS "viewConfig",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.path AS "path",
+		a.tpl_channel AS "tplChannel",
+		a.is_static_content AS "staticContent", 
+		a.is_static_channel AS "staticChannel", 
+		a.content AS "content",
+		a.page_size AS "pageSize",
+		c.name AS "parent.name",
+		c.view_config AS "parent.viewConfig",
+		o.name AS "office.name",
+		s.name AS "site.name",
+		s.theme AS "site.theme",
+		s.static_dir AS "site.staticDir",
+		s.path AS "site.path",
+		s.domain AS "site.domain",
+		s.tpl_solution AS "site.tplSolution",
+		m.tpl_channel_prefix AS "cmsmodel.tplChannelPrefix",
+		m.tpl_content_prefix AS "cmsmodel.tplContentPrefix",
+		m.has_content AS "cmsmodel.hasContent",
+	  	m.model_name AS "cmsmodel.modelName",
+		u.name AS "user.name"
+	</sql>
+	
+	<sql id="cmsCategoryDaoJoins">
+	    LEFT JOIN cms_category c ON c.id = a.parent_id
+	    JOIN cms_model m on a.module = m.id and m.is_disabled='0'
+		JOIN sys_office o ON o.id = a.office_id
+		JOIN sys_user u ON u.id = a.create_by
+		JOIN cms_site s ON a.site_id = s.id
+	</sql>
+    
+	<select id="get" resultType="Category">
+		SELECT 
+			a.id AS "id",
+			a.parent_id AS "parent.id",
+			c.name AS "parent.name",
+			c.is_static_channel AS "parent.staticChannel",
+			c.href AS "parent.href",
+			c.path AS "parent.path",
+			m1.has_content AS "parent.cmsmodel.hasContent",
+			a.parent_ids AS "parentIds",
+			a.path AS "path",
+			a.site_id AS "site.id",
+			a.office_id AS "office.id",
+			a.module AS "module",
+			a.name AS "name",
+			a.image AS "image",
+			a.href AS "href",
+			a.target AS "target",
+			a.tpl_channel AS "tplChannel",
+			a.is_static_content AS "staticContent", 
+			a.is_static_channel AS "staticChannel", 
+			a.description AS "description",
+			a.keywords AS "keywords",
+			a.sort AS "sort",
+			a.in_menu AS "inMenu",
+			a.in_menu AS "inList",
+			a.show_modes AS "showModes",
+			a.allow_comment AS "allowComment",
+			a.is_audit AS "isAudit",
+			a.custom_list_view AS "customListView",
+			a.custom_content_view AS "customContentView",
+			a.view_config AS "viewConfig",
+			a.create_by AS "createBy.id",
+			a.create_date AS "createDate",
+			a.update_by AS "updateBy.id",
+			a.update_date AS "updateDate",
+			a.remarks AS "remarks",
+			a.del_flag AS "delFlag",
+			a.content AS "content",
+			a.page_size AS "pageSize",
+			o.name AS "office.name",
+			u.name AS "user.name",
+			s.name AS "site.name",
+			s.theme AS "site.theme",
+			s.static_dir AS "site.staticDir",
+			s.path AS "site.path",
+			s.domain AS "site.domain",
+			s.tpl_solution AS "site.tplSolution",
+			m.tpl_channel_prefix AS "cmsmodel.tplChannelPrefix",
+			m.tpl_content_prefix AS "cmsmodel.tplContentPrefix",
+			m.has_content AS "cmsmodel.hasContent"
+		FROM cms_category a
+		LEFT JOIN cms_category c ON c.id = a.parent_id
+		LEFT JOIN cms_model m1 on c.module = m1.id and m1.is_disabled='0'
+		JOIN sys_office o ON o.id = a.office_id
+		JOIN sys_user u ON u.id = a.create_by
+		JOIN cms_model m on a.module = m.id and m.is_disabled='0'
+		LEFT JOIN cms_site s ON a.site_id = s.id
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="find" resultType="Category">
+		SELECT 
+			<include refid="cmsCategoryDaoColumns"/>
+		FROM cms_category a
+		<include refid="cmsCategoryDaoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findList" resultType="Category">
+		SELECT 
+			<include refid="cmsCategoryDaoColumns"/>
+		FROM cms_category a
+		<include refid="cmsCategoryDaoJoins"/>
+		<where>
+			a.del_flag = #{delFlag}
+			<if test=" site.id != null and site.id != ''">
+				AND a.site_id  = #{site.id}
+			</if>
+			<if test="parent.id != null and parent.id != ''">
+				AND a.parent_id  = #{parent.id}
+			</if>
+			<!-- ${sqlMap.dsf} -->
+		</where>		
+			ORDER BY a.site_id,a.sort ASC
+	</select>
+	
+	<select id="findModule" resultType="Category">
+		SELECT 
+			<include refid="cmsCategoryDaoColumns"/>
+		FROM cms_category a
+		<include refid="cmsCategoryDaoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test=" site.id != null and site.id != ''">
+				AND a.site_id  = #{site.id}
+			</if>
+			<if test="parent.id != null and parent.id != ''">
+				AND a.parent_id  = #{parent.id}
+			</if>
+			<if test="inMenu != null and inMenu != '' ">
+				AND a.in_menu  = #{inMenu}
+			</if>
+			<!-- ${sqlMap.dsf} -->
+		</where>		
+			ORDER BY a.site_id,a.sort ASC
+	</select>
+	
+	<insert id="insert">
+		 <selectKey resultType="string" order="BEFORE" keyProperty="id">
+              select max(ID)+1 from cms_category
+         </selectKey> 
+		INSERT INTO cms_category(
+			id,
+			parent_id,
+			parent_ids,
+			site_id,
+			office_id,
+			module,
+			name,
+			image,
+			href,
+			target,
+			description,
+			keywords,
+			sort,
+			in_menu,
+			in_list,
+			show_modes,
+			allow_comment,
+			is_audit,
+			custom_list_view,
+			custom_content_view,
+			view_config,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			path,
+			tpl_channel,
+		    is_static_content,
+		    is_static_channel,
+		    content,
+		    page_size
+		) VALUES (
+			#{id},
+			#{parent.id},
+			#{parentIds},
+			#{site.id},
+			#{office.id},
+			#{module},
+			#{name},
+			#{image},
+			#{href},
+			#{target},
+			#{description},
+			#{keywords},
+			#{sort},
+			#{inMenu},
+			#{inList},
+			#{showModes},
+			#{allowComment},
+			#{isAudit},
+			#{customListView},
+			#{customContentView},
+			#{viewConfig},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{path},
+			#{tplChannel},
+			#{staticContent},
+			#{staticChannel},
+			#{content},
+			#{pageSize}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cms_category SET 	
+			
+			parent_id = #{parent.id},
+			parent_ids = #{parentIds},
+			site_id = #{site.id},
+			office_id = #{office.id},
+			module = #{module},
+			name = #{name},
+			image = #{image},
+			href = #{href},
+			target = #{target},
+			description = #{description},
+			keywords = #{keywords},
+			sort = #{sort},
+			in_menu = #{inMenu},
+			in_list = #{inList},
+			show_modes = #{showModes},
+			allow_comment = #{allowComment},
+			is_audit = #{isAudit},
+			custom_list_view = #{customListView},
+			custom_content_view = #{customContentView},
+			view_config = #{viewConfig},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			del_flag = #{delFlag},
+			path = #{path},
+			tpl_channel = #{tplChannel},
+			is_static_content = #{staticContent},
+			is_static_channel = #{staticChannel},
+			content = #{content},
+			page_size = #{pageSize}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateParentIds">
+		UPDATE cms_category SET 
+			parent_id = #{parent.id}, 
+			parent_ids = #{parentIds}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE cms_category SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<select id="findByParentIdAndSiteId" resultType="Category">
+		SELECT 
+			<include refid="cmsCategoryDaoColumns"/>
+		FROM cms_category a
+		<include refid="cmsCategoryDaoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL} 
+			<if test=" site.id != null and site.id != ''">
+				AND a.site_id  = #{site.id}
+			</if>
+			<if test="parent.id != null and parent.id != ''">
+				AND a.parent_id  = #{parent.id}
+			</if>
+		</where>		
+		order by a.site_id, a.sort
+	</select>
+	<select id="findByParentIdsLike" resultType="Category">
+		SELECT 
+			<include refid="cmsCategoryDaoColumns"/>
+		FROM cms_category a
+		<include refid="cmsCategoryDaoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL} 
+			AND a.parent_id LIKE 
+					<if test="dbName == 'oracle'">'%'||#{id}||'%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%', #{id}, '%')</if>
+					<if test="dbName == 'mssql'">'%'+#{id}+'%'</if>
+		</where>		
+		order by a.site_id, a.sort
+	</select>
+	
+	<select id="findStats" resultType="java.util.Map" parameterType="java.util.Map">
+		select max(c.id) as categoryId,
+		       max(c.name) as categoryName,
+		       max(cp.id) as categoryParentId,
+		       max(cp.name) as categoryParentName,
+		       count(*) as cnt,
+		       sum(a.hits) as hits,
+		       max(a.updateDate) as updateDate,
+		       max(o.id) as officeId,
+		       max(o.name) as officeName,
+		  from cms_article a
+		  JOIN cms_category c ON c.id = a.category_id
+		  JOIN cms_category cp ON c.parent_id = cp.id
+		  JOIN sys_office o ON o.id = c.office_id
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL} 
+			AND a.category_id
+			AND c.site_id =
+			AND c.id = :id or c.parent_ids LIKE 
+					<if test="dbName == 'oracle'">'%'||#{parentIds}||'%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%', #{parentIds}, '%')</if>
+					<if test="dbName == 'mssql'">'%'+#{parentIds}+'%'</if>
+			group by cp.sort, cp.id, c.sort, c.id
+			order by cp.sort, cp.id, c.sort, c.id
+		</where>		
+	</select>
+	<select id="findByPathForTag" resultType="Category">
+		SELECT 
+			<include refid="cmsCategoryDaoColumns"/>
+		FROM cms_category a
+		<include refid="cmsCategoryDaoJoins"/>
+		<where>
+			a.del_flag = '0' and a.path=#{path} and a.site_id=#{site.id} ORDER BY a.site_id,a.sort ASC
+		</where>
+	</select>
+	<select id="getChildList" resultType="Category">
+		SELECT 
+			<include refid="cmsCategoryDaoColumns"/>
+		FROM cms_category a
+		<include refid="cmsCategoryDaoJoins"/>
+		<where>
+			a.del_flag = '0' and a.parent_id=#{parentId} ORDER BY a.site_id,a.sort ASC
+		</where>
+	</select>
+	<select id="getTopList" resultType="Category">
+		SELECT 
+			<include refid="cmsCategoryDaoColumns"/>
+		FROM cms_category a
+		<include refid="cmsCategoryDaoJoins"/>
+		<where>
+			a.del_flag = '0' and a.site_id=#{siteId} and a.in_menu = #{inMenu} ORDER BY a.site_id,a.sort ASC
+		</where>
+	</select>
+	<select id="channelStatic" resultType="Category">
+		SELECT 
+			<include refid="cmsCategoryDaoColumns"/>
+		FROM cms_category a
+		<include refid="cmsCategoryDaoJoins"/>
+		<where>
+			a.del_flag = '0' 
+			<if test="channelId!= null and channelId != ''">
+				and (a.id = #{channelId}
+				<if test="containChild == true">
+				or a.parent_id LIKE 
+						<if test="dbName == 'oracle'">'%'||#{channelId}||'%'</if>
+						<if test="dbName == 'mysql'">CONCAT('%', #{channelId}, '%')</if>
+						<if test="dbName == 'mssql'">'%'+#{channelId}+'%'</if>
+				</if>)
+			</if>
+			<if test="siteId != null">
+			AND a.site_id = #{siteId}
+			</if>
+		</where>		
+		order by a.site_id, a.sort
+	</select>
+	<select id="findByParentId" resultType="Category">
+		SELECT 
+			<include refid="cmsCategoryDaoColumns"/>
+		FROM cms_category a
+		<include refid="cmsCategoryDaoJoins"/>
+		<where>
+			a.del_flag = '0'
+			<if test="channelId != null and channelId != ''">
+				AND a.parent_id  = #{channelId}
+			</if>
+		</where>		
+		order by a.site_id, a.sort
+	</select>
+	<select id="getAllCategory" resultType="Category">
+			SELECT	a.id AS "id",
+					a.site_id AS "site.id",
+					a.name AS "name",
+					'false' AS "description"
+			FROM cms_category a where a.site_id != '0' and a.site_id in (SELECT s.id from cms_site s  where s.del_flag = '0') and a.del_flag = '0'
+		 	UNION  
+			SELECT s.id,'0',s.name,'true' from cms_site s  where s.del_flag = '0' 
+	</select>
+
+	<select id="findByParentIdCount"  resultType="java.lang.Integer" >
+		select count(0) as "num" from cms_category a where a.del_flag = '0'
+		<if test="channelId != null and channelId != ''">
+			AND a.parent_id  = #{channelId}
+		</if>
+	</select>
+</mapper>

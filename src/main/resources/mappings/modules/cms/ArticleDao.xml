@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.huazx.ebp.modules.cms.dao.ArticleDao">
+
+	<sql id="cmsArticleColumns">
+		a.id AS "id",
+		a.category_id AS "category.id",
+		a.title AS "title",
+		a.link AS "link",
+		a.color AS "color",
+		a.image AS "image",
+		a.files AS "files",
+		a.keywords AS "keywords",
+		a.description AS "description",
+		d.content AS "articleData.content",
+		d.copyfrom AS "articleData.copyfrom",
+		d.relation AS "articleData.relation",
+		d.allow_comment AS "articleData.allowComment",
+		a.weight AS "weight",
+		a.weight_date AS "weightDate",
+		a.hits AS "hits",
+		a.posid AS "posid",
+		a.custom_content_view AS "customContentView",
+		a.view_config AS "viewConfig",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		c.name AS "category.name",
+		c.is_audit AS "category.isAudit",
+		c.is_static_content AS "category.staticContent",
+		c.path AS "category.path",
+		u.name AS "user.name"
+	</sql>
+
+	<sql id="cmsArticleJoins">
+		JOIN cms_category c ON c.id = a.category_id
+		JOIN cms_article_data d on a.id = d.id
+		JOIN sys_office o ON o.id = c.office_id
+		JOIN sys_user u ON u.id = a.create_by
+	</sql>
+
+	<sql id="cmsArticleColumnsByMap">
+		a.id AS "id",
+		a.title AS "title",
+		a.update_date AS "updateDate",
+		a.link AS "link",
+		c.path AS "category.path"
+	</sql>
+
+	<sql id="cmsArticleJoinsByMap">
+		JOIN cms_category c ON c.id = a.category_id
+	</sql>
+
+	<select id="get" resultType="Article">
+		SELECT
+			<include refid="cmsArticleColumns"/>
+		FROM cms_article a
+		<include refid="cmsArticleJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="Article">
+		SELECT
+			<include refid="cmsArticleColumns"/>
+		FROM cms_article a
+		<include refid="cmsArticleJoins"/>
+		<where>
+			<if test="delFlag != null and delFlag == '-1'">
+				a.del_flag != '1'
+			</if>
+			<if test="delFlag != null and delFlag != '-1'">
+				a.del_flag = #{delFlag}
+			</if>
+			<if test="title != null and title != ''">
+				AND a.title LIKE
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%', #{title}, '%')</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+			</if>
+			<if test="posid != null and posid != ''">
+				AND a.posid LIKE
+					<if test="dbName == 'oracle'">'%'||#{posid}||'%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%', #{posid}, '%')</if>
+					<if test="dbName == 'mssql'">'%'+#{posid}+'%'</if>
+			</if>
+			<if test="category.id != null and category.id != ''">
+				AND (a.category_id = #{category.id}
+				<if test="category.parentIds != null and category.parentIds != ''">
+						<if test="dbName == 'oracle'">or (c.parent_ids like '%'||#{category.id}||'%' and length(#{category.id})=length(a.category_id))</if>
+						<if test="dbName == 'mysql'">or c.parent_ids like CONCAT('%,', #{category.id}, ',%')</if>
+						<if test="dbName == 'mssql'">or (c.parent_ids like '%'+#{category.id}+'%' and len(#{category.id})=len(a.category_id))</if>
+				</if>)
+			</if>
+			<if test="image != null and image != ''">
+				AND a.image  = #{image}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by  = #{createBy.id}
+			</if>
+			 ${sqlMap.dsf}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.weight DESC, a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="Article">
+		SELECT
+			<include refid="cmsArticleColumns"/>
+		FROM cms_article a
+		<include refid="cmsArticleJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.weight DESC, a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO cms_article(
+			id,
+			category_id,
+			title,
+			link,
+			color,
+			image,
+			files,
+			keywords,
+			description,
+			weight,
+			weight_date,
+			hits,
+			posid,
+			custom_content_view,
+			view_config,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{category.id},
+			#{title},
+			#{link},
+			#{color},
+			#{image},
+			#{files},
+			#{keywords},
+			#{description},
+			#{weight},
+			#{weightDate},
+			#{hits},
+			#{posid},
+			#{customContentView},
+			#{viewConfig},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE cms_article SET
+			category_id = #{category.id},
+			title = #{title},
+			link = #{link},
+			color = #{color},
+			image = #{image},
+			files = #{files},
+			keywords = #{keywords},
+			description = #{description},
+			weight = #{weight},
+			weight_date = #{weightDate},
+			hits = #{hits},
+			posid = #{posid},
+			custom_content_view = #{customContentView},
+			view_config = #{viewConfig},
+			create_date = #{createDate},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			del_flag = #{delFlag}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE cms_article SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	<update id="updateInfo">
+		UPDATE cms_article SET
+			del_flag = #{delFlag},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	<update id="updateFlagByIds">
+		UPDATE cms_article SET
+			del_flag = #{delFlag}
+		WHERE id in <foreach item="item" index="index" collection="ids" open="("     separator="," close=")">#{item}</foreach>
+	</update>
+	<select id="findByIdIn" resultType="Article" parameterType="map">
+		SELECT
+			<include refid="cmsArticleColumns"/>
+		from cms_article a
+			<include refid="cmsArticleJoins"/>
+		<where>
+			a.id in
+			<foreach item="item" index="index" collection="ids" open="("     separator="," close=")">#{item}</foreach>
+			<if test="delFlag!=null and delFlag!=''">
+				AND a.del_flag = #{delFlag}
+			</if>
+		</where>
+	</select>
+
+	<update id="updateExpiredWeight">
+		update cms_article SET
+			 weight = 0
+		WHERE weight &gt; 0 AND weight_date &lt;
+			<if test="dbName == 'oracle'">sysdate</if>
+			<if test="dbName == 'mysql'">CURDATE()</if>
+			<if test="dbName == 'mssql'">getdate()</if>
+	</update>
+
+	<update id="updateHitsAddOne">
+		update cms_article set
+			 hits = hits+1
+		 WHERE id = #{id}
+	</update>
+
+	<select id="findStats" resultType="Category">
+		select max(c.id) AS "id",
+		       max(c.name) AS "name",
+		       max(cp.id) AS "parent.id",
+		       max(cp.name) AS "parent.name",
+		       count(*) AS "cnt",
+		       sum(a.hits) AS "hits",
+		       max(a.update_date) as "updateDate",
+		       max(o.id) AS "office.id",
+		       max(o.name) AS "office.name"
+		  FROM cms_article a
+		  RIGHT JOIN cms_category c ON c.id = a.category_id
+		  JOIN cms_category cp ON c.parent_id = cp.id
+		  JOIN sys_office o ON o.id = c.office_id
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND c.site_id = #{site.id}
+			<if test="office.id != null and office.id != ''">
+				AND (c.office_id = #{office.id} OR o.parent_ids like
+					<if test="dbName == 'oracle'">'%'||#{office.id}||'%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%', #{office.id}, '%')</if>
+					<if test="dbName == 'mssql'">'%'+#{office.id}+'%'</if>)
+			</if>
+			<if test="beginDate != null ">
+				AND a.update_date <![CDATA[ >= #{beginDate} ]]>
+			</if>
+			<if test="endDate != null ">
+				AND a.update_date <![CDATA[ <= #{endDate} ]]>
+			</if>
+			<if test="id != null and id != ''">
+				AND (c.id = #{id} OR c.parent_ids LIKE
+					<if test="dbName == 'oracle'">'%'||#{id}||'%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%', #{id}, '%')</if>
+					<if test="dbName == 'mssql'">'%'+#{id}+'%'</if>)
+			</if>
+			group by cp.sort, cp.id, c.sort, c.id
+			order by cp.sort, cp.id, c.sort, c.id
+		</where>
+	</select>
+
+	<select id="getArticleByKeyWord" resultType="Article">
+		SELECT
+			<include refid="cmsArticleColumns"/>
+		FROM cms_article a
+		<include refid="cmsArticleJoins"/>
+		WHERE a.keywords = #{articleId}
+	</select>
+	<select id="findByMap" resultType="Article" parameterType="map">
+		SELECT
+			<include refid="cmsArticleColumnsByMap"/>
+		FROM cms_article a
+		<include refid="cmsArticleJoinsByMap"/>
+		<where>
+			(a.del_flag = '0' or a.del_flag = '6')
+			<if test="siteIds != null">
+				and c.site_id in
+				    <foreach item="item" index="index" collection="siteIds" open="("     separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="channelIds != null">
+				and a.category_id in
+				    <foreach item="item" index="index" collection="channelIds" open="("     separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="paths != null">
+				and c.path in
+				    <foreach item="item" index="index" collection="paths" open="("     separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="title != null">
+			   and a.title LIKE
+			   		<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%', #{title}, '%')</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+			</if>
+			<if test="typeIds != null">
+			   and a.posid LIKE
+			   		<if test="dbName == 'oracle'">'%'||#{typeIds}||'%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%', #{typeIds}, '%')</if>
+					<if test="dbName == 'mssql'">'%'+#{typeIds}+'%'</if>
+			</if>
+			<choose>
+				<when test="orderBy==0">
+					order by a.id desc
+				</when>
+				<when test="orderBy==1">
+					order by a.id asc
+				</when>
+				<when test="orderBy==2">
+					order by a.update_date desc
+				</when>
+				<when test="orderBy==3">
+					order by a.update_date asc
+				</when>
+			</choose>
+		</where>
+	</select>
+	<select id="getSide" resultType="Article">
+		SELECT
+			<include refid="cmsArticleColumns"/>
+		FROM cms_article a
+		<include refid="cmsArticleJoins"/>
+		<where>
+			(a.del_flag = '0' or a.del_flag = '6')
+			<if test="channelId != null">
+			  and a.category_id = #{channelId}
+			</if>
+			<if test="siteId != null">
+			  and c.site_id = #{siteId}
+			</if>
+			<choose>
+				<when test="next == true">
+					 a.create_date <![CDATA[>]]> (select s.create_date from cms_article s where id=#{id})
+					 order by a.create_date asc
+				</when>
+				<when test="next == false">
+					 a.create_date <![CDATA[<]]>  (select s.create_date from cms_article s where id=#{id})
+					 order by a.create_date desc
+				</when>
+			</choose>
+		</where>
+	</select>
+		<select id="getListByIdsForTag" resultType="Article">
+		SELECT
+			<include refid="cmsArticleColumns"/>
+		FROM cms_article a
+		<include refid="cmsArticleJoins"/>
+		<where>
+			(a.del_flag = '0' or a.del_flag = '6')
+			<if test="ids != null">
+				and c.id in
+				    <foreach item="item" index="index" collection="ids" open="("     separator="," close=")">#{item}</foreach>
+			</if>
+			<choose>
+				<when test="orderBy==0">
+					order by a.id desc
+				</when>
+				<when test="orderBy==1">
+					order by a.id asc
+				</when>
+				<when test="orderBy==2">
+					order by a.update_date desc
+				</when>
+				<when test="orderBy==3">
+					order by a.update_date asc
+				</when>
+			</choose>
+		</where>
+	</select>
+	<select id="contentsOfParentChannel" resultType="Article">
+		SELECT
+			<include refid="cmsArticleColumns"/>
+		from cms_article a
+			<include refid="cmsArticleJoins"/>
+		<where>
+		    (a.del_flag = '0' or a.del_flag = '6') AND c.parent_id = #{channelId}
+		</where>
+	</select>
+	<select id="contentsOfParentChannelCount" resultType="java.lang.Integer">
+		SELECT
+			 COUNT(0) as num from cms_article a
+			 JOIN cms_category c ON c.id = a.category_id
+		<where>
+		    (a.del_flag = '0' or a.del_flag = '6') AND c.parent_id = #{channelId}
+		</where>
+	</select>
+	<select id="contentsOfChannel" resultType="Article">
+		SELECT
+			<include refid="cmsArticleColumns"/>
+		from cms_article a
+			<include refid="cmsArticleJoins"/>
+		<where>
+		    (a.del_flag = '0' or a.del_flag = '6') AND c.id = #{channelId}
+		</where>
+	</select>
+	<select id="contentsOfChannelCount" resultType="java.lang.Integer">
+		SELECT
+			 COUNT(0) as num from cms_article a
+			 JOIN cms_category c ON c.id = a.category_id
+		<where>
+		    (a.del_flag = '0' or a.del_flag = '6') AND c.id = #{channelId}
+		</where>
+	</select>
+	<select id="contentStatic" resultType="Article">
+		SELECT
+			<include refid="cmsArticleColumns"/>
+		from cms_article a
+			<include refid="cmsArticleJoins"/>
+		<where>
+		    (a.del_flag = '0' or a.del_flag = '6')
+		    <if test="siteId != null and siteId != ''">
+				AND c.site_id  = #{siteId}
+			</if>
+			<if test="channelId!= null and channelId != ''">
+				and (c.id = #{channelId}
+				<if test="containChild == true">
+				or c.parent_id LIKE
+						<if test="dbName == 'oracle'">'%'||#{channelId}||'%'</if>
+						<if test="dbName == 'mysql'">CONCAT('%', #{channelId}, '%')</if>
+						<if test="dbName == 'mssql'">'%'+#{channelId}+'%'</if>
+				</if>)
+			</if>
+			 <if test="startDate != null">
+				AND a.update_date <![CDATA[ >= #{startDate} ]]>
+			</if>
+			<if test="endDate != null">
+				AND a.update_date <![CDATA[ <= #{endDate} ]]>
+			</if>
+			 order by a.update_date DESC
+		</where>
+	</select>
+	<delete id="deleteTrue">
+		delete from cms_article WHERE id = #{id}
+	</delete>
+	<select id="findByCategoryId" resultType="Article">
+		SELECT
+			<include refid="cmsArticleColumns"/>
+		FROM cms_article a
+		<include refid="cmsArticleJoins"/>
+		WHERE a.category_id = #{categoryId} AND (a.del_flag = '0' or a.del_flag = '6')
+	</select>
+	<update id="updateFlagByCategoryId">
+		UPDATE cms_article SET
+			del_flag = #{delFlag}
+		WHERE category_id = #{categoryId}
+	</update>
+	<select id="findByTitle" resultType="Article" parameterType="map">
+		SELECT
+			<include refid="cmsArticleColumns"/>
+		FROM cms_article a
+		<include refid="cmsArticleJoins"/>
+		WHERE a.title LIKE
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%', #{title}, '%')</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+				AND (a.del_flag = '0' or a.del_flag = '6')
+	</select>
+</mapper>

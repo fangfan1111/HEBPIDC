@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.huazx.ebp.modules.sys.dao.SysAttachmentDao">
+    
+	<sql id="sysAttachmentColumns">
+		a.id AS "id",
+		a.file_name AS "fileName",
+		a.save_name AS "saveName",
+		a.extention AS "extention",
+		a.file_size AS "fileSize",
+		a.order_no AS "orderNo",
+		a.object_id AS "objectId",
+		a.save_path AS "savePath",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.classify_info AS "classifyInfo",
+		a.remarks AS "remarks"
+	</sql>
+	
+	<sql id="sysAttachmentJoins">
+	</sql>
+    
+	<select id="get" resultType="SysAttachment">
+		SELECT 
+			<include refid="sysAttachmentColumns"/>
+		FROM sys_attachment a
+		<include refid="sysAttachmentJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getSysAttachmentInfo" resultType="SysAttachment">
+		SELECT
+		<include refid="sysAttachmentColumns"/>
+		FROM sys_attachment a
+		<include refid="sysAttachmentJoins"/>
+		WHERE 1 = 1
+		<if test="fileName != null and  fileName != ''">
+			AND file_name = #{fileName}
+		</if>
+		<if test="fileSize != null and fileSize != 0">
+			AND file_size = #{fileSize}
+		</if>
+		 order by order_no asc
+	</select>
+	
+	<select id="findList" resultType="SysAttachment">
+		SELECT 
+			<include refid="sysAttachmentColumns"/>
+		FROM sys_attachment a
+		<include refid="sysAttachmentJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SysAttachment">
+		SELECT 
+			<include refid="sysAttachmentColumns"/>
+		FROM sys_attachment a
+		<include refid="sysAttachmentJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sys_attachment(
+			id,
+			file_name,
+			save_name,
+			extention,
+			file_size,
+			order_no,
+			object_id,
+			save_path,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			classify_info,
+			remarks
+		) VALUES (
+			#{id},
+			#{fileName},
+			#{saveName},
+			#{extention},
+			#{fileSize},
+			#{orderNo},
+			#{objectId},
+			#{savePath},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{classifyInfo},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sys_attachment SET 	
+			file_name = #{fileName},
+			save_name = #{saveName},
+			extention = #{extention},
+			file_size = #{fileSize},
+			order_no = #{orderNo},
+			object_id = #{objectId},
+			save_path = #{savePath},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			classify_info = #{classifyInfo},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM sys_attachment
+		WHERE id = #{id}
+	</update>
+	<select id="getFileUrl"  parameterType="map"  resultType="map">
+		select
+		a.id,
+		a.save_path,
+		a.file_name,
+		a.object_id
+		from sys_attachment a
+		WHERE a.id in
+		<foreach item="item" index="index" collection="ids" open="("     separator="," close=")">#{item}</foreach>
+	</select>
+</mapper>

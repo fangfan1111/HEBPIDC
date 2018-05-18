@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+	<name>viewForm</name>
+	<filePath>src/main/webapp/WEB-INF/views/${lastPackageName}/${moduleName}/${subModuleName}</filePath>
+	<fileName>${className}FormView.jsp</fileName>
+	<content><![CDATA[
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ include file="/WEB-INF/views/include/taglib.jsp"%>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<title>${functionNameSimple}管理</title>
+	<%@include file="/WEB-INF/views/include/head.jsp" %>
+</head>
+<body>
+<div class="nav-tabs-custom">
+	<ul class="nav nav-tabs">
+		<li><a href="${r"${ctx}"}/${urlPrefix}/">${functionNameSimple}列表</a></li>
+		<li class="active"><a href="${r"${ctx}"}/${urlPrefix}/view?id=${"${"+className+".id}"}">${functionNameSimple}查看</a></li>
+	</ul><br/></div>
+	<form:form id="inputForm" modelAttribute="${className}" action="${r"${ctx}"}/${urlPrefix}/save" method="post" class="form-horizontal">
+	<div class="box-body">
+		<sys:message content="${r"${message}"}"/>		
+		<#list table.columnList as c>
+			<#if c.isEdit?? && c.isEdit == "1" && (c.isNotBaseField || c.simpleJavaField == 'remarks')>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">${c.comments}：</label>
+			<div class="col-sm-10 controls">
+			<#if c.showType == "input">
+				<div class="form-control input-sm">${"$"}{${className}.${c.javaFieldId}}</div>
+			<#elseif c.showType == "textarea">
+				<div class="form-control">${"$"}{${className}.${c.javaFieldId}}</div>
+			<#elseif c.showType == "select">
+				<div class="form-control input-sm">${"$"}{fns:getDictLabel(${className}.${c.javaFieldId},'${c.dictType}','')}</div>
+			<#elseif c.showType == "checkbox">
+				<div class="input-xlarge">${"$"}{fns:getDictLabels(${className}.${c.javaFieldId},'${c.dictType}','')}</div>
+			<#elseif c.showType == "radiobox">
+				<div class="form-control input-sm">${"$"}{fns:getDictLabel(${className}.${c.javaFieldId},'${c.dictType}','')}</div>
+			<#elseif c.showType == "dateselect">
+				<div class="form-control input-sm"><fmt:formatDate value="${"$"}{${className}.${c.javaFieldId}}" pattern="yyyy-MM-dd HH:mm:ss"/></div>
+			<#elseif c.showType == "userselect">
+				<div class="form-control input-sm">${"$"}{${className}.${c.javaFieldName}}</div>
+			<#elseif c.showType == "officeselect">
+				<div class="form-control input-sm">${"$"}{${className}.${c.javaFieldName}}</div>
+			<#elseif c.showType == "areaselect">
+				<div class="input-xlarge">${"$"}{${className}.${c.javaFieldName}}</div>
+			<#elseif c.showType == "fileselect">
+				<form:hidden id="${c.simpleJavaField}" path="${c.javaFieldId}" htmlEscape="false"<#if c.dataLength != "0"> maxlength="${c.dataLength}"</#if> class="input-xlarge"/>
+				<sys:myuploadlocal readonly="true" input="${c.simpleJavaField}" type="files" uploadPath="/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${className}" isSaveLocal="false" uploadMaxSize="0" uploadMimeTypes="txt,zip,doc,docx,pdf,ppt,pptx,xls,xlsx" saveRealName="false" multiSelection="true"/>
+
+			</#if>
+			</div>
+		</div>
+			</#if>
+		</#list>
+		<div class="form-actions">
+			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
+		</div>
+		</div>
+	</form:form>
+</body>
+</html>]]>
+	</content>
+</template>

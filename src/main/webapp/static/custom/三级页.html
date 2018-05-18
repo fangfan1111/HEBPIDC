@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>文章页</title>
+<link href="css/style_0519.css" rel="stylesheet" type="text/css" />
+<script src="JavaScript/jquery.js"></script>
+<script src="JavaScript/jquery-hd.js"></script>
+<script>
+$(function(){
+	$(".hd_hover").each(function(i){
+		$(this).mouseover(function(){
+		$(".hd_ceng").eq(i).show();
+	}).mouseout(function(){
+		$(".hd_ceng").mouseover(function(){
+			}).mouseout(function(){
+					$(".hd_ceng").eq(i).hide();
+					})
+				}).mouseout(function(){
+				$(".hd_ceng").hide();
+				})
+	})
+})
+</script>
+</head>
+
+<body>
+	<div class="web_header">
+    	<div style="width:1190px;">
+        	<div class="web_hd01">JeeSite Web</div>
+            <div class="web_hd02">
+                <ul>
+                    <li style="width:80px;" class="hd_li1"><a href="">首页</a></li>
+                    <li class="hd_hover">
+                        <a href="">组织机构</a>
+                        <div class="hd_ceng">
+                            <a href="" target="_blank">机构设置</a>
+                            <a href="" target="_blank">机构职责</a>
+                        </div>
+                    </li>
+                    <li class="hd_hover">
+                        <a href="">质量检验</a>
+                        <div class="hd_ceng">
+                            <a href="" target="_blank">质量检验</a>
+                            <a href="" target="_blank">机构职责</a>
+                        </div>
+                    </li>
+                    <li class="hd_hover">
+                        <a href="">软件介绍</a>
+                        <div class="hd_ceng">
+                            <a href="" target="_blank">软件介绍</a>
+                            <a href="" target="_blank">机构职责</a>
+                        </div>
+                    </li>
+                    <li><a href="">友情链接</a></li>
+                    <li><a href="">百度一下</a></li>
+                    <li><a href="">公共留言</a></li>
+                </ul>
+            </div>
+            <form class="web_hd03">
+                <input type="text" class="txt" />
+                <input type="button" class="btn" />
+            </form>
+            <div class="web_hd04">
+                <form>
+                <input type="button" class="denglu" />
+                <input type="button" class="zhuce" />
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="lb_main">
+    	<div class="lb_m_left" id="left">
+        	<div class="lb_m_l1">组织机构</div>
+            <ul class="lb_m_l2">
+            	<li class="lb_tx01"><a href="" class="lb_li01">网站简介</a></li>
+                <li><a href="" class="lb_li02">网站简介</a></li>
+                <li><a href="" class="lb_li03">网站简介</a></li>
+            </ul>
+            <div class="lb_m_l1">推荐阅读</div>
+            <div style="height:200px;"></div>
+        </div>
+        <div class="lb_m_right" id="right">
+        	<div class="lb_m_r1"><a href="">首页</a> > <a href="">组织机构</a> > 网站介绍</div>
+            <div class="nr_zw">
+            	<h3>文章标题文章标题测试测试</h3>
+                <span class="nr_tb">文章内容</span>
+                <div class="clear"></div>
+                <p>文章内容文章 内容即日起BAE扩展服务中的Log服务支持lighttpd日志开关，可分别设置每一个部署的lighttpd日志开关。</p>
+                <p>对于现有Log服务实例，默认开启所有部署的lighttpd日志（与以前保持一致），对于新建Log服务实例，默认关闭。详情请参见帮助文档
+《设置lighttpd日志》 </p>
+                <p>请注意，lighttpd日志暂不计入日志空间配额。后续如果计入配额，将另行通告。</p>
+                <p>如果您有任何问题，请通过工单或拨打客服热线（4008-777-818）与我们联系。</p>
+                <div class="nr_xie">
+                	<span>发布者：系统管理员</span><span>点击数：<em>2</em></span><span>发布时间：2014-03-04 08:23:11</span><span>更新时间：2015-03-05 09:23:00</span>
+                </div>
+                <span class="nr_tb2">相关文章</span>
+                <div class="clear"></div>
+                <ul class="nr_ul">
+                	<li><a href="">相关文章</a></li>
+                    <li><a href="">相关文章</a></li>
+                    <li><a href="">相关文章</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="web_footer">
+    	<p style="color:#6c6c6c;"><a href="">公共留言</a>|<a href="">全站搜索</a>|<a href="">站点地图</a>|<a href="">技术支持</a>|<a href="">后台管理</a></p>
+        <p>Copyright © 2012-2013 ThinkGem-Powered By JeeSite V1.0</p>
+        <p class="web_time">
+        	<script language="javascript">
+	                function writeDateInfo()
+	                {
+	                var day="";
+	                var month="";
+	                var ampm="";
+	                var ampmhour="";
+	                var myweekday="";
+	                var year="";
+	                mydate=new Date();
+	                myweekday=mydate.getDay();
+	                myyear= mydate.getYear();
+	                mymonth=mydate.getMonth()+1;
+	                myday= mydate.getDate();
+	                year=(myyear > 200) ? myyear : 1900 + myyear;
+	                if(myweekday == 0)
+	                weekday=" 星期日";
+	                else if(myweekday == 1)
+	                weekday=" 星期一";
+	                else if(myweekday == 2)
+	                weekday=" 星期二";
+	                else if(myweekday == 3)
+	                weekday=" 星期三";
+	                else if(myweekday == 4)
+	                weekday=" 星期四";
+	                else if(myweekday == 5)
+	                weekday=" 星期五";
+	                else if(myweekday == 6)
+	                weekday=" 星期六";
+	                document.write(year+"年"+mymonth+"月"+myday+"日&nbsp;&nbsp;"+weekday);
+	                }
+                   </script>
+	               <script>writeDateInfo();</script>
+        </p>
+    </div>
+    <script>
+if(document.getElementById("left").offsetHeight<document.getElementById("right").offsetHeight)
+{document.getElementById("left").style.height=document.getElementById("right").offsetHeight +"px";}
+         if(document.getElementById("left").offsetHeight>document.getElementById("right").offsetHeight)
+{document.getElementById("right").style.height=document.getElementById("left").offsetHeight +"px";}
+
+</script>
+</body>
+</html>

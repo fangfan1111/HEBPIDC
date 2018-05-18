@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>首页 - ${site.name}</title>
+<meta http-equiv="keywords" content="${site.keywords!}"/>
+<meta http-equiv="description" content="${site.description!}"/>
+<head>
+[#include "../include/header.html"/]
+</head>
+<body>
+ [#include "../include/navi.html"/]
+ <div class="jdc_main">
+        <div class="jumbotron flexslider" id="demo01">
+  			<ul class="slides">
+                                  [@cms_content_list  typeId='1'  orderBy='0'  titLen='100' count='10'  dateFormat='yyyy-MM-dd'  new='0'  showDesc='0'         target='1'   channelOption='1' siteId=site.id  append='...']
+                        [#list tag_list as a]
+                                   <li class="slide_li">
+	                           <a target="_blank" href="${a.url}" style="color:#FFF">
+                                             [#if a.image??]
+                                                  <img src="${a.image}" />
+                                                    [#else]
+                                                    <h1>
+			            			${a.title}
+			            		     </h1>
+                                                       <p>[@text_cut s=a.description len=descLen append='...'/]</p>
+                                             [/#if]
+                                   </a>
+                                  </li>
+                        [/#list]
+                    [/@cms_content_list]
+                </ul>
+         </div>
+	<div class="jdc_mn1">
+        	<div class="jdc_mn11"><span>新闻资讯</span></div>
+            <ul>
+            	                  [@cms_content_list   channelId='2'     new='1'   orderBy='2'  titLen='35' count='6'  dateFormat='yyyy-MM-dd'   showDesc='0'         target='1'   channelOption='1' siteId=site.id  append='...']
+                        [#list tag_list as a]
+	                        <li>[#if new=='1'][#if a.new]<img src="${ctxStatic}/custom/images/new.gif"/>[/#if][/#if]<a href="${a.url}" style="color: ${a.color!}"> [@text_cut s=a.title len=descLen append='...'/]</a></li>
+                        [/#list]
+                    [/@cms_content_list]
+            </ul>
+            <p> [@cms_channel id='2']<a href="${tag_bean.url}" target="_blank">
+                更多>></a>[/@cms_channel]</p>
+        </div>
+   <div class="jdc_mn1" style="margin-left:15px;">
+        	<div class="jdc_mn11"><span>博客专栏</span></div>
+            <ul>
+            	                  [@cms_content_list   channelId='4'        orderBy='2'  titLen='35' count='6'  dateFormat='yyyy-MM-dd'  new='0'  showDesc='0'         target='1'   channelOption='1' siteId=site.id  append='...']
+                        [#list tag_list as a]
+	                        <li><a href="${a.url}" style="color: ${a.color!}"> [@text_cut s=a.title len=descLen append='...'/]</a></li>
+                        [/#list]
+                    [/@cms_content_list]
+            </ul>
+            <p> [@cms_channel id='4']<a href="${tag_bean.url}" target="_blank">
+                更多>></a>[/@cms_channel]</p>
+        </div>
+  <div class="jdc_mn1" style="margin-left:15px;">
+        	<div class="jdc_mn11"><span>新闻资讯</span></div>
+            <ul>
+            	                  [@cms_content_list   channelId='2'        orderBy='2'  titLen='35' count='6'  dateFormat='yyyy-MM-dd'  new='0'  showDesc='0'         target='1'   channelOption='1' siteId=site.id  append='...']
+                        [#list tag_list as a]
+	                        <li><a href="${a.url}" style="color: ${a.color!}"> [@text_cut s=a.title len=descLen append='...'/]</a></li>
+                        [/#list]
+                    [/@cms_content_list]
+            </ul>
+            <p> [@cms_channel id='2']<a href="${tag_bean.url}" target="_blank">
+                更多>></a>[/@cms_channel]</p>
+        </div>
+</div>
+ [#include "../include/footer.html"/]
+</body>
+</html>

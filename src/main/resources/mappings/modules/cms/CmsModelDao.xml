@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.huazx.ebp.modules.cms.dao.CmsModelDao">
+    
+	<sql id="cmsModelColumns">
+		a.id AS "id",
+		a.model_name AS "modelName",
+		a.model_path AS "modelPath",
+		a.tpl_channel_prefix AS "tplChannelPrefix",
+		a.tpl_content_prefix AS "tplContentPrefix",
+		a.title_img_width AS "titleImgWidth",
+		a.title_img_height AS "titleImgHeight",
+		a.content_img_width AS "contentImgWidth",
+		a.content_img_height AS "contentImgHeight",
+		a.priority AS "priority",
+		a.has_content AS "hasContent",
+		a.is_disabled AS "isDisabled",
+		a.is_def AS "isDef",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="cmsModelJoins">
+	</sql>
+    
+	<select id="get" resultType="CmsModel">
+		SELECT 
+			<include refid="cmsModelColumns"/>
+		FROM cms_model a
+		<include refid="cmsModelJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CmsModel">
+		SELECT 
+			<include refid="cmsModelColumns"/>
+		FROM cms_model a
+		<include refid="cmsModelJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="modelName != null and modelName != ''">
+				AND a.model_name = #{modelName}
+			</if>
+			<if test="modelPath != null and modelPath != ''">
+				AND a.model_path = #{modelPath}
+			</if>
+			<if test="hasContent != null and hasContent != ''">
+				AND a.has_content = #{hasContent}
+			</if>
+			<if test="isDisabled != null and isDisabled != ''">
+				AND a.is_disabled = #{isDisabled}
+			</if>
+			<if test="isDef != null and isDef != ''">
+				AND a.is_def = #{isDef}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.priority 
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CmsModel">
+		SELECT 
+			<include refid="cmsModelColumns"/>
+		FROM cms_model a
+		<include refid="cmsModelJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cms_model(
+			id,
+			model_name,
+			model_path,
+			tpl_channel_prefix,
+			tpl_content_prefix,
+			title_img_width,
+			title_img_height,
+			content_img_width,
+			content_img_height,
+			priority,
+			has_content,
+			is_disabled,
+			is_def,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{modelName},
+			#{modelPath},
+			#{tplChannelPrefix},
+			#{tplContentPrefix},
+			#{titleImgWidth},
+			#{titleImgHeight},
+			#{contentImgWidth},
+			#{contentImgHeight},
+			#{priority},
+			#{hasContent},
+			#{isDisabled},
+			#{isDef},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cms_model SET 	
+			model_name = #{modelName},
+			model_path = #{modelPath},
+			tpl_channel_prefix = #{tplChannelPrefix},
+			tpl_content_prefix = #{tplContentPrefix},
+			title_img_width = #{titleImgWidth},
+			title_img_height = #{titleImgHeight},
+			content_img_width = #{contentImgWidth},
+			content_img_height = #{contentImgHeight},
+			priority = #{priority},
+			has_content = #{hasContent},
+			is_disabled = #{isDisabled},
+			is_def = #{isDef},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE cms_model SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

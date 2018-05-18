@@ -1,0 +1,67 @@
+#content-main {
+    height: calc(100% - 140px);
+}
+
+.fixed-nav #content-main {
+    height: calc(100% - 80px);
+    overflow: hidden;
+}
+@media (max-width: 768px) {
+    body.fixed-sidebar .navbar-static-side {
+        display: none;
+    }
+    body.fixed-sidebar.mini-navbar .navbar-static-side {
+        width: 70px;
+    }
+    .lock-word {
+        display: none;
+    }
+    .navbar-form-custom {
+        display: none;
+    }
+    .navbar-header {
+        display: inline;
+        float: left;
+    }
+    .sidebard-panel {
+        z-index: 2;
+        position: relative;
+        width: auto;
+        min-height: 100% !important;
+    }
+    .sidebar-content .wrapper {
+        padding-right: 0px;
+        z-index: 1;
+    }
+    .fixed-sidebar.body-small .navbar-static-side {
+        display: none;
+        z-index: 2001;
+        position: fixed;
+        width: 220px;
+    }
+    .fixed-sidebar.body-small.mini-navbar .navbar-static-side {
+        display: block;
+    }
+    .ibox-tools {
+        float: none;
+        text-align: right;
+        display: block;
+    }
+    .content-tabs {
+        display: none;
+    }
+    #content-main {
+        height: calc(100% - 100px);
+    }
+    .fixed-nav #content-main {
+        height: calc(100% - 38px);
+    }
+}
+
+
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5) {
+    #content-main {
+        -webkit-overflow-scrolling: touch;
+        overflow-y: scroll;
+    }
+}

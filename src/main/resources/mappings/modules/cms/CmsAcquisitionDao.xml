@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.huazx.ebp.modules.cms.dao.CmsAcquisitionDao">
+    
+	<sql id="cmsAcquisitionColumns">
+		a.id AS "id",
+		a.site_id AS "siteId",
+		a.curr_num AS "currNum",
+		a.curr_item AS "currItem",
+		a.total_item AS "totalItem",
+		a.page_encoding AS "pageEncoding",
+		a.channel_id AS "channelId",
+		a.acq_name AS "acqName",
+		a.status AS "status",
+		a.pause_time AS "pauseTime",
+		a.plan_list AS "planList",
+		a.dynamic_addr AS "dynamicAddr",
+		a.dynamic_start AS "dynamicStart",
+		a.dynamic_end AS "dynamicEnd",
+		a.linkset_start AS "linksetStart",
+		a.linkset_end AS "linksetEnd",
+		a.link_start AS "linkStart",
+		a.link_end AS "linkEnd",
+		a.title_start AS "titleStart",
+		a.title_end AS "titleEnd",
+		a.keywords_start AS "keywordsStart",
+		a.keywords_end AS "keywordsEnd",
+		a.description_start AS "descriptionStart",
+		a.description_end AS "descriptionEnd",
+		a.content_start AS "contentStart",
+		a.content_end AS "contentEnd",
+		a.pagination_start AS "paginationStart",
+		a.pagination_end AS "paginationEnd",
+		a.img_acqu AS "imgAcqu",
+		a.content_prefix AS "contentPrefix",
+		a.img_prefix AS "imgPrefix",
+		a.view_start AS "viewStart",
+		a.view_end AS "viewEnd",
+		a.releasetime_start AS "releasetimeStart",
+		a.releasetime_end AS "releasetimeEnd",
+		a.author_start AS "authorStart",
+		a.author_end AS "authorEnd",
+		a.origin_start AS "originStart",
+		a.origin_end AS "originEnd",
+		a.releasetime_format AS "releasetimeFormat",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		u.name AS "user.name",
+		a.queue AS "queue",
+		a.start_time AS "startTime",
+		a.end_time AS "endTime",
+		a.file_acqu AS "fileAcqu",
+		a.file_prefix AS "filePrefix",
+		a.file_start AS "fileStart",
+		a.file_end AS "fileEnd",
+		a.table_acqu AS "tableAcqu"
+	</sql>
+	
+	<sql id="cmsAcquisitionJoins">
+		JOIN sys_user u ON u.id = a.create_by
+	</sql>
+    
+	<select id="get" resultType="CmsAcquisition">
+		SELECT 
+			<include refid="cmsAcquisitionColumns"/>
+		FROM cms_acquisition a
+		<include refid="cmsAcquisitionJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CmsAcquisition">
+		SELECT 
+			<include refid="cmsAcquisitionColumns"/>
+		FROM cms_acquisition a
+		<include refid="cmsAcquisitionJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="acqName != null and acqName != ''">
+				AND a.acq_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{acqName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{acqName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{acqName},'%')</if>
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="siteId != null and siteId != ''">
+				AND a.site_id = #{siteId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CmsAcquisition">
+		SELECT 
+			<include refid="cmsAcquisitionColumns"/>
+		FROM cms_acquisition a
+		<include refid="cmsAcquisitionJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cms_acquisition(
+			id,
+			site_id,
+			channel_id,
+			acq_name,
+			status,
+			pause_time,
+			plan_list,
+			dynamic_addr,
+			dynamic_start,
+			dynamic_end,
+			link_start,
+			link_end,
+			title_start,
+			title_end,
+			keywords_start,
+			keywords_end,
+			description_start,
+			description_end,
+			content_start,
+			content_end,
+			pagination_start,
+			pagination_end,
+			img_acqu,
+			content_prefix,
+			img_prefix,
+			view_start,
+			view_end,
+			releasetime_start,
+			releasetime_end,
+			author_start,
+			author_end,
+			origin_start,
+			origin_end,
+			releasetime_format,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			curr_num,
+			curr_item,
+			total_item,
+			page_encoding,
+			linkset_start,
+			linkset_end,
+			queue,
+			start_time,
+			end_time,
+			file_acqu,
+			file_prefix,
+			file_start,
+			file_end,
+			table_acqu
+		) VALUES (
+			#{id},
+			#{siteId},
+			#{channelId},
+			#{acqName},
+			#{status},
+			#{pauseTime},
+			#{planList},
+			#{dynamicAddr},
+			#{dynamicStart},
+			#{dynamicEnd},
+			#{linkStart},
+			#{linkEnd},
+			#{titleStart},
+			#{titleEnd},
+			#{keywordsStart},
+			#{keywordsEnd},
+			#{descriptionStart},
+			#{descriptionEnd},
+			#{contentStart},
+			#{contentEnd},
+			#{paginationStart},
+			#{paginationEnd},
+			#{imgAcqu},
+			#{contentPrefix},
+			#{imgPrefix},
+			#{viewStart},
+			#{viewEnd},
+			#{releasetimeStart},
+			#{releasetimeEnd},
+			#{authorStart},
+			#{authorEnd},
+			#{originStart},
+			#{originEnd},
+			#{releasetimeFormat},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{currNum},
+			#{currItem},
+			#{totalItem},
+			#{pageEncoding},
+			#{linksetStart},
+			#{linksetEnd},
+			#{queue},
+			#{startTime},
+		    #{endTime},
+		    #{fileAcqu},
+			#{filePrefix},
+			#{fileStart},
+			#{fileEnd},
+			#{tableAcqu}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cms_acquisition SET 	
+			site_id = #{siteId},
+			channel_id = #{channelId},
+			acq_name = #{acqName},
+			status = #{status},
+			pause_time = #{pauseTime},
+			plan_list = #{planList},
+			dynamic_addr = #{dynamicAddr},
+			dynamic_start = #{dynamicStart},
+			dynamic_end = #{dynamicEnd},
+			link_start = #{linkStart},
+			link_end = #{linkEnd},
+			title_start = #{titleStart},
+			title_end = #{titleEnd},
+			keywords_start = #{keywordsStart},
+			keywords_end = #{keywordsEnd},
+			description_start = #{descriptionStart},
+			description_end = #{descriptionEnd},
+			content_start = #{contentStart},
+			content_end = #{contentEnd},
+			pagination_start = #{paginationStart},
+			pagination_end = #{paginationEnd},
+			img_acqu = #{imgAcqu},
+			content_prefix = #{contentPrefix},
+			img_prefix = #{imgPrefix},
+			view_start = #{viewStart},
+			view_end = #{viewEnd},
+			releasetime_start = #{releasetimeStart},
+			releasetime_end = #{releasetimeEnd},
+			author_start = #{authorStart},
+			author_end = #{authorEnd},
+			origin_start = #{originStart},
+			origin_end = #{originEnd},
+			releasetime_format = #{releasetimeFormat},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			curr_num = #{currNum},
+			curr_item = #{currItem},
+			total_item = #{totalItem},
+			page_encoding = #{pageEncoding},
+			linkset_start = #{linksetStart},
+		    linkset_end = #{linksetEnd},
+		    queue = #{queue},
+		    start_time = #{startTime},
+			end_time = #{endTime},
+			file_acqu = #{fileAcqu},
+			file_prefix = #{filePrefix},
+			file_start = #{fileStart},
+			file_end = #{fileEnd},
+			table_acqu = #{tableAcqu}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE cms_acquisition SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<select id="getStarted" resultType="CmsAcquisition">
+		SELECT 
+			<include refid="cmsAcquisitionColumns"/>
+		FROM cms_acquisition a
+		<include refid="cmsAcquisitionJoins"/>
+		WHERE a.site_id = #{siteId} and a.status = '1' and a.del_flag = '0' order by a.update_date DESC
+	</select>
+	<select id="checkComplete" resultType="CmsAcquisition">
+		SELECT 
+			<include refid="cmsAcquisitionColumns"/>
+		FROM cms_acquisition a
+		<include refid="cmsAcquisitionJoins"/>
+		WHERE a.id = #{acquisitionId} and a.status = '1' and a.del_flag = '0'
+	</select>
+	<select id="getMaxQueue" resultType="java.lang.Integer">
+		SELECT  MAX(a.QUEUE) FROM cms_acquisition a WHERE a.site_id = #{siteId}  and a.del_flag = '0'
+	</select>
+	
+	<select id="popAcquFromQueue" resultType="CmsAcquisition">
+		SELECT 
+			<include refid="cmsAcquisitionColumns"/>
+		FROM cms_acquisition a
+		<include refid="cmsAcquisitionJoins"/>
+		WHERE a.site_id = #{siteId} and a.queue>0 and a.del_flag = '0' order by a.queue
+	</select>
+	<update id="updateLargerQueues">
+		update cms_acquisition a
+		set a.queue = a.queue-1 
+		WHERE a.site_id = #{siteId} and a.queue > #{queueNum} and a.del_flag = '0'
+	</update>
+</mapper>

@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>${channel.title!channel.name} - ${site.name}</title>
+<head>
+[#include "../include/header.html"/]
+<link rel=“stylesheet“ href=“${ctxStatic}/bootstrap3.3.6/bootstrap/css/bootstrap.min.css“＞
+</head>
+<body>
+ [#include "../include/navi.html"/]
+ <div class="lb_main">
+    	<div class="lb_m_left" id="left">
+        	<div class="lb_m_l1">栏目列表</div>
+            <ul class="lb_m_l2" style="margin:0 0 0 15px;">
+                       
+            	[#list channel.nodeList as n]
+                   <li class="[#if channel.id==n.id] lb_tx01 [/#if]"> <a href="${n.url}" target="_blank"  class="[#if channel.id==n.id] lb_li03 [/#if]">${n.name}</a></li>
+                [/#list]
+            </ul>
+            <div class="lb_m_l1">推荐阅读</div>
+            <div class="lb_m_l02" style="height:200px;">
+            		
+            </div>
+        </div>
+        <div class="lb_m_right" id="right">
+        	<div class="lb_m_r1">
+                       <a href="${ctxfront}">首页</a> > [#list channel.nodeList as n]<a href="${n.url}" target="_blank">${n.name}</a>[#if n_has_next] > [/#if][/#list]
+                </div>
+         	<ul class="lb_m_r2">
+	                 [@cms_content_page count='10' orderBy='2' channelId=channel.id channelOption='1' dateFormat='yyyy-MM-dd']
+                                 [#list tag_pagination.list as a] 
+                                       <li>
+	                               <span>
+	                                  ${a.updateDate?string(dateFormat)}
+	                                </span>
+	                                  <a href="${a.url}" style="color:${a.color!}">[@text_cut s=a.title len=22 /]</a>
+	                                 </li>
+                                   [/#list]
+	       </ul>
+	                    <div class="pagination">[@cms_pagination sysPage='1'/]</div>
+                        [/@cms_content_page]
+            <div class="lb_page"></div>
+        </div>
+    </div>
+</body>
+</html>

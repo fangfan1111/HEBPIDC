@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.huazx.ebp.modules.order.dao.TestOrderDao">
+    
+	<sql id="testOrderColumns">
+		a.id AS "id",
+		a.order_no AS "orderNo",
+		a.order_time AS "orderTime",
+		a.total_amount AS "totalAmount",
+		a.pay_type AS "payType",
+		a.sys_user_id AS "sysUserId",
+		a.address_code AS "addressCode",
+		a.address AS "address",
+		a.mobile_phone AS "mobilePhone",
+		a.order_status AS "orderStatus",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		u6.name AS "loginName"
+	</sql>
+
+	<!-- 进行商品详情和商品表多表查询 -->
+	<sql id="testOrderDetailJoins">
+		LEFT JOIN test_order_detail b ON b.order_id=a.id
+	</sql>
+
+	<sql id="testOrderJoins">
+		LEFT JOIN sys_user u6 ON u6.id = a.sys_user_id
+	</sql>
+    
+	<select id="get" resultType="TestOrder">
+		SELECT  DISTINCT
+			<include refid="testOrderColumns"/>
+		FROM test_order a
+			<include refid="testOrderJoins"/>
+			<include refid="testOrderDetailJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TestOrder">
+		SELECT DISTINCT
+			<include refid="testOrderColumns"/>
+		FROM test_order a
+			<include refid="testOrderJoins"/>
+			<include refid="testOrderDetailJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="orderNo != null and orderNo != ''">
+				AND a.order_no LIKE CONCAT('%', #{orderNo}, '%')
+			</if>
+			<if test="beginOrderTime != null and endOrderTime != null">
+				AND a.order_time BETWEEN #{beginOrderTime} AND #{endOrderTime}
+			</if>
+			<if test="payType != null and payType != ''">
+				AND a.pay_type = #{payType}
+			</if>
+			<if test="sysUserId != null and sysUserId != ''">
+				AND a.sys_user_id = #{sysUserId}
+			</if>
+			<if test="mobilePhone != null and mobilePhone != ''">
+				AND a.mobile_phone LIKE CONCAT('%', #{mobilePhone}, '%')
+			</if>
+			<if test="orderStatus != null and orderStatus != ''">
+				AND a.order_status = #{orderStatus}
+			</if>
+			<if test="beginCreateDate != null and endCreateDate != null">
+				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+			</if>
+			<if test="testOrderDetailList.size!=0 and testOrderDetailList[0].commodityName != null and testOrderDetailList[0].commodityName != ''">
+				AND b.commodity_name LIKE CONCAT('%', #{testOrderDetailList[0].commodityName}, '%')
+				AND b.del_flag = #{DEL_FLAG_NORMAL}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TestOrder">
+		SELECT 
+			<include refid="testOrderColumns"/>
+		FROM test_order a
+		<include refid="testOrderJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO test_order(
+			id,
+			order_no,
+			order_time,
+			total_amount,
+			pay_type,
+			sys_user_id,
+			address_code,
+			address,
+			mobile_phone,
+			order_status,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{orderNo},
+			#{orderTime},
+			#{totalAmount},
+			#{payType},
+			#{sysUserId},
+			#{addressCode},
+			#{address},
+			#{mobilePhone},
+			#{orderStatus},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE test_order SET 	
+			order_no = #{orderNo},
+			order_time = #{orderTime},
+			total_amount = #{totalAmount},
+			pay_type = #{payType},
+			sys_user_id = #{sysUserId},
+			address_code = #{addressCode},
+			address = #{address},
+			mobile_phone = #{mobilePhone},
+			order_status = #{orderStatus},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE test_order SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
